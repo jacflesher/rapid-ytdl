@@ -1,0 +1,38 @@
+ <div class="container">
+    <form class="form-container" [formGroup]="ytdlForm" id="ytdlForm" (ngSubmit)="onSubmit()">
+        <div *ngIf="submit_clicked === false" class="formWrapper">
+            <label for="ytaddress">Enter YouTube URL:&nbsp;&nbsp;&nbsp;</label>
+            <input id="ytaddress" type="text" name="ytaddress" class="ytaddress" formControlName="ytaddress">
+            <button type="submit" class="submit">Submit</button>
+            <!-- <div class="instructions">
+              <p>1. Find a YouTube video you'd like to download</p>
+              <p>2. Copy the link of the video from YouTube and paste in the field above</p>
+              <p>3. Click "Submit"</p>
+              <p>4. If done correctly, a linked title to the now downloadable video will appear.</p>
+          </div> -->
+        </div>
+        <div *ngIf="submit_clicked === true" class="recaptcha"><div class="container-fluid py-3">
+            <form #form="ngForm">
+              <div class="row mt-3">
+                <div class="col-sm-12 mb-2">
+                  <re-captcha id="recaptcha" name="recaptcha" #recaptcha="ngModel" [(ngModel)]="recaptchatoken" required [class.is-invalid]="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)"></re-captcha>
+                  <div *ngIf="recaptcha.invalid && (recaptcha.dirty || recaptcha.touched)" class="invalid-feedback">
+                    <div *ngIf="recaptcha.errors?.['required']">This field is required.</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12 mb-2">
+                  <button type="button" class="btn btn-sm btn-primary" (click)="send(form)">Send</button>
+                </div>
+              </div>
+            </form>
+          </div></div>
+    </form>
+    <div *ngIf="submit_clicked === true" class="formWrapper">
+        <div *ngIf="url === '' && title !== ''">{{title}}</div>
+        <div *ngIf="url !== '' && title !== ''" class="url">Right-Click to Download!&nbsp;&nbsp;<a href="{{url}}" target="_blank" rel="noopener">{{title}}</a></div>
+        <div *ngIf="url === '' && title === ''">&nbsp;</div>
+    </div>
+</div>
+

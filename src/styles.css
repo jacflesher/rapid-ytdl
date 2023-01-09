@@ -1,0 +1,16 @@
+/* You can add global styles to this file, and also import other style files */
+footer {
+    color: black;
+    font-size: xx-small;
+    display: table;
+    text-align: center;
+    margin-left: auto;
+    position: relative;
+    margin-right: auto;
+    margin-top: 150px;
+}
+html {
+    background-color: #333;
+    color: white;
+}
+  

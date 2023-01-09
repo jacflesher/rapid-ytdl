@@ -1,0 +1,3 @@
+podman build -t us-central1-docker.pkg.dev/testproj-05sept2022/cloud-run-source-deploy/ytdl:v0.6 .
+gcloud auth print-access-token | podman login -u oauth2accesstoken --password-stdin us-central1-docker.pkg.dev
+podman push us-central1-docker.pkg.dev/testproj-05sept2022/cloud-run-source-deploy/ytdl:v0.6 --remove-signatures
