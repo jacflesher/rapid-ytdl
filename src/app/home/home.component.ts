@@ -26,13 +26,12 @@ export class HomeComponent implements OnInit{
   errorText: string;
   url: string = '';
   title: string = '';
+  tag: string;
+  uri: string;
   lgth: number = 0;
-  token: string = '';
   recaptchatoken: string|undefined;
-  endpoint: string = 'https://ytdl-jf2qqsfolq-uc.a.run.app/download/';
-  // endpoint: string = 'http://localhost:8080/download/';
+  endpoint: string = 'https://ytdl-jf2qqsfolq-uc.a.run.app/download';
   
-
   constructor(
     private fb: FormBuilder,
     private http2: HttpClient,
@@ -49,16 +48,24 @@ export class HomeComponent implements OnInit{
   initializeForms(): void {
     this.ytdlForm = this.fb.group({
       ytaddress: ['', Validators.required],
+      submitbutton: ['', Validators.required],
     });
+  }
+  
+  downloadVideo(){
+    this.tag='video';
+  }
+
+  downloadAudio(){
+    this.tag='audio';
   }
 
   onSubmit() {
     this.url = '';
-    this.token = '';
     this.title = 'Please verify you are a human by completing the CAPTCHA...';
     const jsonBody = this.ytdlForm.value;
     if (jsonBody['ytaddress'] !== ''){
-      let regex = new RegExp('[a-zA-Z0-9-?_?]{10,12}')
+      let regex = new RegExp('[a-zA-Z0-9-_]{11}')
       if (regex.test(jsonBody['ytaddress']) === false){
         this.title = 'Error: "' + jsonBody['ytaddress'] + '" not accepted. Please enter valid YouTube video URL.';
         return;
@@ -69,7 +76,6 @@ export class HomeComponent implements OnInit{
       }
       if (jsonBody['ytaddress'].match(regex).length === 1){
         this.vcode = jsonBody['ytaddress'].match(regex)
-        console.log('token: ' + this.token);
         this.submit_clicked = true;
       }
     } else {
@@ -78,6 +84,7 @@ export class HomeComponent implements OnInit{
     }
   }
 
+  //recaptcha
   public send(form: NgForm): void {
     this.title = 'Please wait...';
     if (form.invalid) {
@@ -86,10 +93,14 @@ export class HomeComponent implements OnInit{
       }
       return;
     }
-    // console.debug(`Token [${this.recaptchatoken}] generated`);
-    const requesturi = this.endpoint + this.vcode + '/' + this.recaptchatoken;
-    this.requestbuilderService.getSubmit(requesturi).subscribe(response => {
-      console.log(response)
+    if (this.tag === 'video'){
+        // download video
+        this.uri = this.endpoint + '/video/' + this.vcode + '/' + this.recaptchatoken;
+    } else {
+        // download audio
+        this.uri = this.endpoint + '/audio/' + this.vcode + '/' + this.recaptchatoken;
+    }
+    this.requestbuilderService.getSubmit(this.uri).subscribe(response => {
       const jsonBody2 = response;
       if (jsonBody2['url'] !== ''){
         this.url = jsonBody2['url'];
@@ -101,6 +112,9 @@ export class HomeComponent implements OnInit{
       }
     },
     errorResponse => {
+      const errorJsonBody = errorResponse;
+      this.title = errorJsonBody['error'];
+      this.url = '';
       // this.initializeForms();
     });
   }

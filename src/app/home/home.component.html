@@ -3,13 +3,8 @@
         <div *ngIf="submit_clicked === false" class="formWrapper">
             <label for="ytaddress">Enter YouTube URL:&nbsp;&nbsp;&nbsp;</label>
             <input id="ytaddress" type="text" name="ytaddress" class="ytaddress" formControlName="ytaddress">
-            <button type="submit" class="submit">Submit</button>
-            <!-- <div class="instructions">
-              <p>1. Find a YouTube video you'd like to download</p>
-              <p>2. Copy the link of the video from YouTube and paste in the field above</p>
-              <p>3. Click "Submit"</p>
-              <p>4. If done correctly, a linked title to the now downloadable video will appear.</p>
-          </div> -->
+            <button type="submit" class="submit" (click)="downloadVideo()">Video</button>
+            <button type="submit" class="submit" (click)="downloadAudio()">Audio</button>
         </div>
         <div *ngIf="submit_clicked === true" class="recaptcha"><div class="container-fluid py-3">
             <form #form="ngForm">
